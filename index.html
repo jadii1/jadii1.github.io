@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '917455760640241');
+fbq('track', 'PageView');
+</script>
+
+<meta charset="UTF-8">
+<title>Online Coffee Store</title>
+
+<style>
+.page{display:none;}
+.page.active{display:block;}
+</style>
+
+</head>
+
+<body>
+
+<div id="home" class="page active">
+<h1>Home</h1>
+<button onclick="showPage('products')">View Coffee</button>
+</div>
+
+<div id="products" class="page">
+<h1>Product</h1>
+<p>Ethiopian Yirgacheffe - $18.99</p>
+<button onclick="addToCart(); showPage('cart')">Add to Cart</button>
+</div>
+
+<div id="cart" class="page">
+<h1>Cart</h1>
+<button onclick="showPage('checkout')">Proceed to Checkout</button>
+</div>
+
+<div id="checkout" class="page">
+<h1>Checkout</h1>
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<button onclick="completeOrder(); showPage('thankyou')">Complete Order</button>
+</div>
+
+<div id="thankyou" class="page">
+<h1>Order Successful</h1>
+<button onclick="showPage('home')">Home</button>
+</div>
+
+<script>
+
+function showPage(pageId){
+
+document.querySelectorAll('.page').forEach(p=>{
+p.classList.remove('active');
+});
+
+document.getElementById(pageId).classList.add('active');
+
+
+// ====== STANDARD EVENTS ======
+
+if(pageId === "products"){
+fbq('track','ViewContent',{
+content_name:"Ethiopian Yirgacheffe",
+value:18.99,
+currency:"USD"
+});
+}
+
+if(pageId === "checkout"){
+fbq('track','InitiateCheckout',{
+value:18.99,
+currency:"USD"
+});
+}
+
+if(pageId === "thankyou"){
+fbq('track','Purchase',{
+value:18.99,
+currency:"USD"
+});
+}
+
+}
+
+function addToCart(){
+
+alert("Added to Cart");
+
+fbq('track','AddToCart',{
+content_name:"Ethiopian Yirgacheffe",
+value:18.99,
+currency:"USD"
+});
+
+}
+
+function completeOrder(){
+alert("Order Completed");
+}
+
+</script>
+
+</body>
+</html>
+
+
+
