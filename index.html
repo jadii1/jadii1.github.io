@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="facebook-domain-verification" content="qle9xp7rjsfnlg0atzypqry2j7wcr1" />
+
+<meta name="facebook-domain-verification" content="qle9xp7rjsfnlg0atzypqry2j7wcr1"/>
 
 <!-- Meta Pixel Code -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+!function(f,b,e,v,n,t,s){
+if(f.fbq)return;
+n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '917455760640241');
-fbq('track', 'PageView');
+if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];
+t=b.createElement(e);t.async=!0;
+t.src=v;
+s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s);
+}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init','917455760640241');
+fbq('track','PageView');
 </script>
 
 <meta charset="UTF-8">
@@ -59,6 +65,14 @@ fbq('track', 'PageView');
 
 <script>
 
+// PRODUCT DATA
+var product={
+ id:"coffee_001",
+ name:"Ethiopian Yirgacheffe",
+ price:18.99
+};
+
+// PAGE NAVIGATION + EVENTS
 function showPage(pageId){
 
 document.querySelectorAll('.page').forEach(p=>{
@@ -67,85 +81,62 @@ p.classList.remove('active');
 
 document.getElementById(pageId).classList.add('active');
 
+// SPA PageView
+fbq('track','PageView');
 
-<script>
-
-// Example dynamic product object
-var product = {
- id: "coffee_001",
- name: "Ethiopian Yirgacheffe",
- price: 18.99
-};
-
-// ====== STANDARD EVENTS ======
-
-if(pageId === "products"){
+// STANDARD EVENTS
+if(pageId==="products"){
  fbq('track','ViewContent',{
-  content_name: product.name,
-  content_ids: [product.id],
-  content_type: "product",
-  value: product.price,
-  currency: "USD"
+  content_name:product.name,
+  content_ids:[product.id],
+  content_type:"product",
+  value:product.price,
+  currency:"USD"
  });
 }
 
-if(pageId === "checkout"){
+if(pageId==="checkout"){
  fbq('track','InitiateCheckout',{
-  content_ids: [product.id],
-  content_type: "product",
-  value: product.price,
-  currency: "USD",
-  num_items: 1
+  content_ids:[product.id],
+  content_type:"product",
+  value:product.price,
+  currency:"USD",
+  num_items:1
  });
 }
 
-if(pageId === "thankyou"){
+if(pageId==="thankyou"){
  fbq('track','Purchase',{
-  content_ids: [product.id],
-  content_type: "product",
-  value: product.price,
-  currency: "USD",
-  num_items: 1
+  content_ids:[product.id],
+  content_type:"product",
+  value:product.price,
+  currency:"USD",
+  num_items:1
  });
 }
 
-// ====== ACTION EVENTS ======
+}
 
+// ACTION EVENTS
 function addToCart(){
 
- alert("Added to Cart");
+alert("Added to Cart");
 
- fbq('track','AddToCart',{
-  content_name: product.name,
-  content_ids: [product.id],
-  content_type: "product",
-  value: product.price,
-  currency: "USD"
- });
+fbq('track','AddToCart',{
+ content_name:product.name,
+ content_ids:[product.id],
+ content_type:"product",
+ value:product.price,
+ currency:"USD"
+});
 
 }
 
 function completeOrder(){
-
- alert("Order Completed");
-
- fbq('track','Purchase',{
-  content_ids: [product.id],
-  content_type: "product",
-  value: product.price,
-  currency: "USD",
-  num_items: 1
- });
-
+alert("Order Completed");
 }
 
 </script>
 
-
 </body>
 </html>
-
-
-
-
-
