@@ -68,52 +68,83 @@ p.classList.remove('active');
 document.getElementById(pageId).classList.add('active');
 
 
+<script>
+
+// Example dynamic product object
+var product = {
+ id: "coffee_001",
+ name: "Ethiopian Yirgacheffe",
+ price: 18.99
+};
+
 // ====== STANDARD EVENTS ======
 
 if(pageId === "products"){
-fbq('track','ViewContent',{
-content_name:"Ethiopian Yirgacheffe",
-value:18.99,
-currency:"USD"
-});
+ fbq('track','ViewContent',{
+  content_name: product.name,
+  content_ids: [product.id],
+  content_type: "product",
+  value: product.price,
+  currency: "USD"
+ });
 }
 
 if(pageId === "checkout"){
-fbq('track','InitiateCheckout',{
-value:18.99,
-currency:"USD"
-});
+ fbq('track','InitiateCheckout',{
+  content_ids: [product.id],
+  content_type: "product",
+  value: product.price,
+  currency: "USD",
+  num_items: 1
+ });
 }
 
 if(pageId === "thankyou"){
-fbq('track','Purchase',{
-value:18.99,
-currency:"USD"
-});
+ fbq('track','Purchase',{
+  content_ids: [product.id],
+  content_type: "product",
+  value: product.price,
+  currency: "USD",
+  num_items: 1
+ });
 }
 
-}
+// ====== ACTION EVENTS ======
 
 function addToCart(){
 
-alert("Added to Cart");
+ alert("Added to Cart");
 
-fbq('track','AddToCart',{
-content_name:"Ethiopian Yirgacheffe",
-value:18.99,
-currency:"USD"
-});
+ fbq('track','AddToCart',{
+  content_name: product.name,
+  content_ids: [product.id],
+  content_type: "product",
+  value: product.price,
+  currency: "USD"
+ });
 
 }
 
 function completeOrder(){
-alert("Order Completed");
+
+ alert("Order Completed");
+
+ fbq('track','Purchase',{
+  content_ids: [product.id],
+  content_type: "product",
+  value: product.price,
+  currency: "USD",
+  num_items: 1
+ });
+
 }
 
 </script>
 
+
 </body>
 </html>
+
 
 
 
