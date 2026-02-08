@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fashion Navbar</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      #userGreeting {
+        display: none;
+      }
+      #logout-btn {
+        display: none;
+      }
+      #login-btn {
+        display: inline;
+      }
+      #register-btn {
+        display: inline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">FASHION</div>
+
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="auth-icon">
+        <div class="user-menu-container" id="userMenu">
+          <button id="userMenuButton" class="user-avatar">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar" />
+          </button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <button class="btn authBtn" id="userGreeting"></button>
+            <a class="btn" href="myorders.html">Orders</a>
+            <a class="btn" href="#">Profile</a>
+            <a class="btn" href="#">Settings</a>
+            <button class="btn" id="logout-btn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn authBtn" id="login-btn">
+            <a href="login.html">Login</a>
+          </button>
+          <button class="btn authBtn" id="register-btn">
+            <a href="register.html">Register</a>
+          </button>
+        </div>
+        <div class="icons">
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+          <a href="cart.html" class="cart-icon">
+            <img
+              src="https://img.icons8.com/ios-filled/24/shopping-bag.png"
+              alt="Cart"
+            />
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="carousel">
+      <div class="slides-wrapper">
+        <div class="slides">
+          <div class="slide">
+            <img src="/images/c-4.jpg" alt="Banner 1" />
+            <div class="slide-content">
+              <h2>Welcome to shopping center</h2>
+              <p>Discover amazing deals today.</p>
+              <button class="slide-btn">Shop Now</button>
+            </div>
+          </div>
+          <div class="slide">
+            <img src="/images/c-3.jpg" alt="Banner 2" />
+            <div class="slide-content">
+              <h2>Explore New Arrivals</h2>
+              <p>Fresh styles just for you.</p>
+              <button class="slide-btn">Browse</button>
+            </div>
+          </div>
+          <div class="slide">
+            <img src="/images/c-2.jpg" alt="Banner 3" />
+            <div class="slide-content">
+              <h2>Special Discounts</h2>
+              <p>Up to 50% off selected items.</p>
+              <button class="slide-btn">Explore Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="prev">&#10094;</button>
+      <button class="next">&#10095;</button>
+    </div>
+
+    <div class="container">
+      <div class="filter-buttons" id="filterButtons"></div>
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+
+    <div class="home-banner">
+      <video autoplay muted loop playsinline>
+        <source
+          src="https://cdn.pixabay.com/video/2020/04/07/35264-407130725_tiny.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+      <div class="home-banner-content">
+        <section class="banner">
+          <div class="banner-text">
+            <h1>Elevate Your Style</h1>
+            <p>
+              Discover the latest trends in fashion with our curated
+              collections.
+            </p>
+            <a href="#">Shop Now</a>
+          </div>
+          <div class="banner-img">
+            <img
+              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D"
+              alt="Fashion Model"
+            />
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="site-footer container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h4>About FASHION</h4>
+          <p>
+            Your brand's story, values, and mission go here. You can add more
+            about your services too.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Follow Us</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Your Brand. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script src="navbar.js"></script>
+    <script src="addToCart.js"></script>
+    <script>
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCount = document.getElementById("cartCount");
+        if (cartCount) {
+          cartCount.textContent = totalItems;
+        }
+      }
+
+      updateCartCount();
+    </script>
+
+    <!-- <script>
+      const greeting = document.getElementById("userGreeting");
+      const loginBtn = document.getElementById("login-btn");
+      const registerBtn = document.getElementById("register-btn");
+      window.addEventListener("DOMContentLoaded", () => {
+        const user =
+          JSON.parse(localStorage.getItem("user")) ||
+          JSON.parse(sessionStorage.getItem("user"));
+
+        if (user && user.email) {
+          const email = user.email;
+          const username = email.split("@")[0];
+          greeting.textContent = `Hello, ${username}`;
+          greeting.style.display = "inline"; // or "block"
+          greeting.style.textTransform = "capitalize";
+          loginBtn.style.display = "none";
+          registerBtn.style.display = "none";
+        } else {
+          greeting.style.display = "none";
+        }
+      });
+
+      function logout() {
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
+        window.location.reload(); // or redirect to login
+      }
+    </script> -->
+  </body>
+</html>

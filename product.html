@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Details</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      #userGreeting {
+        display: none;
+      }
+      #logout-btn {
+        display: none;
+      }
+      #login-btn {
+        display: inline;
+      }
+      #register-btn {
+        display: inline;
+      }
+
+      /* produc deatail  */
+
+      .product-detail-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .image-column {
+        flex: 1 1 350px;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .main-image {
+        width: 100%;
+        max-width: 400px;
+        max-height: 400px;
+        height: auto;
+        border-radius: 10px;
+        object-fit: contain;
+        margin-bottom: 12px;
+        /* border: 1px solid #ccc; */
+      }
+
+      .thumbnails {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .thumbnails img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border: 2px solid transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: border 0.3s;
+      }
+
+      .thumbnails img:hover,
+      .thumbnails img.active {
+        border-color: #111;
+      }
+
+      .info-column {
+        flex: 1 1 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .price {
+        color: #28a745;
+      }
+
+      .product-detail-card button {
+        margin-top: 10px;
+        color: white;
+        font-size: 16px;
+        padding: 12px;
+        background: #28a745;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .add-to-cart-btn:hover {
+        background: #25c94b;
+      }
+
+      .related-product h3 {
+        margin-bottom: 20px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .product-detail-card {
+          flex-direction: column;
+          padding: 16px;
+        }
+
+        .image-column,
+        .info-column {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .main-image {
+          max-width: 100%;
+        }
+      }
+      @media (max-width: 528px) {
+        .product-detail-card {
+          flex-direction: column;
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">FASHION</div>
+
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="auth-icon">
+        <div class="user-menu-container" id="userMenu">
+          <button id="userMenuButton" class="user-avatar">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar" />
+          </button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <button class="btn authBtn" id="userGreeting"></button>
+            <a class="btn" href="myorders.html">Orders</a>
+            <a class="btn" href="#">Profile</a>
+            <a class="btn" href="#">Settings</a>
+            <button class="btn" id="logout-btn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn authBtn" id="login-btn">
+            <a href="login.html">Login</a>
+          </button>
+          <button class="btn authBtn" id="register-btn">
+            <a href="register.html">Register</a>
+          </button>
+        </div>
+        <div class="icons">
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+          <a href="cart.html" class="cart-icon">
+            <img
+              src="https://img.icons8.com/ios-filled/24/shopping-bag.png"
+              alt="Cart"
+            />
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container product-detail" id="productContainer"></div>
+
+    <div class="container related-product">
+      <h3>Related Products</h3>
+      <div id="related-products" class="product-grid"></div>
+    </div>
+
+    <footer class="container site-footer">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h4>About FASHION</h4>
+          <p>
+            Your brand's story, values, and mission go here. You can add more
+            about your services too.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Follow Us</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Your Brand. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="addToCart.js"></script>
+    <script src="navbar.js"></script>
+
+    <script>
+      function getSlugFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("slug");
+      }
+
+      // products details
+      function renderProductDetail(product) {
+        const container = document.getElementById("productContainer");
+
+        container.innerHTML = `
+    <div class="product-detail-card">
+        <div class="image-column">
+        <img
+          id="mainImage"
+          src=""
+          alt="Main Product Image"
+          class="main-image"
+        />
+
+        <div id="thumbnailContainer" class="thumbnails"></div>
+      </div>
+      <div class="info-column">
+        <h1 >${product.name}</h1>
+        <h3 class="price" >$${product.price.toFixed(2)}</h3>
+        <p class="description">${product.description}</p>
+        <p><strong>Category:</strong> ${product.category}</p>
+        <p><strong>Brand:</strong> ${product.brand}</p>
+        <p><strong>Rating:</strong> ${product.avgRating} ★ (${
+          product.numReviews
+        } reviews)</p>
+        <p><strong>Stock:</strong> ${product.countInStock}</p>
+         <button class="add-to-cart-btn " data-id="${
+           product.slug
+         }">Add to Cart</button>
+      </div>
+    </div>
+  `;
+        document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const productId = btn.getAttribute("data-id");
+            const productToAdd = products.find((p) => p.slug == productId);
+            addToCart(productToAdd);
+          });
+        });
+      }
+
+      // add to cart
+      // function addToCart(product) {
+      //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      //   const exists = cart.find((item) => item.slug === product.slug);
+      //   if (exists) {
+      //     exists.quantity += 1;
+      //   } else {
+      //     cart.push({ ...product, quantity: 1 });
+      //   }
+
+      //   localStorage.setItem("cart", JSON.stringify(cart));
+      //   alert(`${product.name} added to cart!`);
+      // }
+
+      // related products
+      const slug = getSlugFromURL();
+      const product = products.find((p) => p.slug === slug);
+
+      const relatedProducts = products.filter(
+        (p) => p.category === product.category && p.slug !== product.slug
+      );
+
+      const relatedContainer = document.getElementById("related-products");
+      relatedProducts.forEach((product) => {
+        const card = document.createElement("div");
+        card.classList.add("product-card");
+
+        card.innerHTML = `
+    <img src="${product.images[0]}" alt="${product.name}">
+    <h3>${product.name.slice(0, 25)}...</h3>
+    <p>$${product.price.toFixed(2)}</p>
+     <button>
+            <a href="product.html?slug=${product.slug}">View Details</a>
+          </button>
+   <button class="add-to-cart-btn" data-id="${
+     product.slug
+   }">Add to Cart</button>
+  `;
+
+        relatedContainer.appendChild(card);
+      });
+
+      if (product) {
+        renderProductDetail(product);
+      } else {
+        document.getElementById(
+          "productContainer"
+        ).innerHTML = `<p>Product not found.</p>`;
+      }
+      const mainImage = document.getElementById("mainImage");
+      mainImage.src = product.images[0];
+
+      // Create thumbnails
+      const thumbnailContainer = document.getElementById("thumbnailContainer");
+      product.images.forEach((imgSrc, index) => {
+        const thumb = document.createElement("img");
+        thumb.src = imgSrc;
+        thumb.classList.add("thumbnail");
+
+        // Click event to change the main image
+        thumb.addEventListener("click", () => {
+          mainImage.src = imgSrc;
+        });
+
+        thumbnailContainer.appendChild(thumb);
+      });
+
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCount = document.getElementById("cartCount");
+        if (cartCount) {
+          cartCount.textContent = totalItems;
+        }
+      }
+
+      updateCartCount();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      #userGreeting {
+        display: none;
+      }
+      #logout-btn {
+        display: none;
+      }
+      #login-btn {
+        display: inline;
+      }
+      #register-btn {
+        display: inline;
+      }
+
+      .cart-cantainer {
+        margin: 0 auto;
+        max-width: 1200px;
+      }
+
+      .cart-cantainer h1 {
+        text-align: center;
+        margin-top: 40px;
+        color: #333;
+      }
+
+      #cartContainer .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        padding: 20px 0;
+        gap: 20px;
+      }
+
+      .cart-item img {
+        width: 100px;
+        border-radius: 8px;
+      }
+
+      .cart-details {
+        flex: 1;
+        margin-left: 20px;
+      }
+
+      .cart-details p {
+        margin: 4px 0;
+      }
+
+      .cart-details .cart-remove-btn {
+        background-color: red;
+        padding: 5px 8px;
+        font-size: 14px;
+      }
+
+      .totalAmount {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 20px 0;
+      }
+
+      .cart-total-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        margin: 15px 0;
+      }
+      .checkout-card h1 {
+        margin-bottom: 15px;
+        margin-top: 0;
+      }
+      .cart-total-summary .checkout-price {
+        font-size: 1.3rem;
+      }
+      .cart-total-summary .price {
+        font-weight: bold;
+      }
+      .checkout-card button {
+        color: #fff;
+        background: #28a745;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+      .checkout-card button:hover {
+        background: #20973c;
+      }
+
+      .empty-cart-container {
+        padding: 30px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+      @media (max-width: 768px) {
+        .cart-cantainer .cart-item {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">FASHION</div>
+
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="auth-icon">
+        <div class="user-menu-container" id="userMenu">
+          <button id="userMenuButton" class="user-avatar">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar" />
+          </button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <button class="btn authBtn" id="userGreeting"></button>
+            <a class="btn" href="myorders.html">Orders</a>
+            <a class="btn" href="#">Profile</a>
+            <a class="btn" href="#">Settings</a>
+            <button class="btn" id="logout-btn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn authBtn" id="login-btn">
+            <a href="login.html">Login</a>
+          </button>
+          <button class="btn authBtn" id="register-btn">
+            <a href="register.html">Register</a>
+          </button>
+        </div>
+        <div class="icons">
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+          <a href="cart.html" class="cart-icon">
+            <img
+              src="https://img.icons8.com/ios-filled/24/shopping-bag.png"
+              alt="Cart"
+            />
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="cart-cantainer" id="mainCartContainer">
+        <h1>Your Shopping Cart</h1>
+        <div id="cartContainer"></div>
+        <div id="totalAmount" class="totalAmount"></div>
+        <div class="checkout-card">
+          <h1>Order Summary</h1>
+          <hr />
+          <div class="cart-total-summary">
+            <span class="checkout-price">Total:</span>
+            <span class="checkout-price price" id="checkoutTotalAmount"
+              >$0.00</span
+            >
+          </div>
+          <button class="checkout-btn btn">
+            <a href="checkout.html">Proceed to Checkout</a>
+          </button>
+        </div>
+      </div>
+      <div class="" id="emptyCartMsg"></div>
+    </div>
+
+    <footer class="container site-footer">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h4>About FASHION</h4>
+          <p>
+            Your brand's story, values, and mission go here. You can add more
+            about your services too.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Follow Us</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Your Brand. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="navbar.js"></script>
+    <script src="userdata.js"></script>
+    <script>
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartContainer = document.getElementById("cartContainer");
+      const totalAmount = document.getElementById("totalAmount");
+      const checkoutCard = document.getElementById("checkout-card");
+      const mainCartContainer = document.getElementById("mainCartContainer");
+      const emptyCartMsg = document.getElementById("emptyCartMsg");
+      const checkoutTotalAmount = document.getElementById(
+        "checkoutTotalAmount"
+      );
+
+      let total = 0;
+      console.log("total :", total);
+      cart.forEach((item) => {
+        total += item.price * item.quantity;
+      });
+      totalAmount.innerHTML = `Total : $${total}`;
+      checkoutTotalAmount.innerText = `$${total}`;
+      emptyCartMsg.innerHTML = "";
+      if (cart.length === 0) {
+        emptyCartMsg.innerHTML = `
+        <div class="empty-cart-container">
+        <h1 class='empty-msg'>Your cart is empty.</h1>
+          <a href="shop.html" class="btn">Go back</a>
+          </div>
+          `;
+
+        mainCartContainer.innerHTML = "";
+      }
+
+      cart.forEach((item) => {
+        const createDiv = document.createElement("div");
+        createDiv.classList.add("cart-item");
+        createDiv.innerHTML = `
+        <img src="${item.images[0]}" alt="${item.name}">
+        <div class="cart-details">
+           <p>${item.name}</p>
+           <p><strong>Price</strong>: <span>$${item.price}</span></p>
+           <p>Quantity: ${item.quantity}</p>
+           <p class="price">Total: <strong>$${(
+             item.price * item.quantity
+           ).toFixed(2)}</strong></p>
+           <button class="btn cart-remove-btn" onclick="removerFromCart(${
+             item.id
+           })">remove</button>
+          </div>
+        `;
+        cartContainer.appendChild(createDiv);
+      });
+
+      function removerFromCart(id) {
+        if (confirm("Are you sure you want to remove product?")) {
+          const updatedCart = cart.filter((item) => item.id !== id);
+          localStorage.setItem("cart", JSON.stringify(updatedCart));
+        }
+      }
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCount = document.getElementById("cartCount");
+        if (cartCount) {
+          cartCount.textContent = totalItems;
+        }
+      }
+
+      updateCartCount();
+    </script>
+  </body>
+</html>

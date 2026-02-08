@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      #userGreeting {
+        display: none;
+      }
+      #logout-btn {
+        display: none;
+      }
+      #login-btn {
+        display: inline;
+      }
+      #register-btn {
+        display: inline;
+      }
+      .myorder-page {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        font-family: sans-serif;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background-color: #f4f4f4;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      table .btn {
+        padding: 8px 10px;
+      }
+      .viewBtn {
+        background-color: green;
+      }
+      .deleteBtn {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">FASHION</div>
+
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="auth-icon">
+        <div class="user-menu-container" id="userMenu">
+          <button id="userMenuButton" class="user-avatar">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar" />
+          </button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <button class="btn authBtn" id="userGreeting"></button>
+            <a class="btn" href="myorders.html">Orders</a>
+            <a class="btn" href="#">Profile</a>
+            <a class="btn" href="#">Settings</a>
+            <button class="btn" id="logout-btn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn authBtn" id="login-btn">
+            <a href="login.html">Login</a>
+          </button>
+          <button class="btn authBtn" id="register-btn">
+            <a href="register.html">Register</a>
+          </button>
+        </div>
+        <div class="icons">
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+          <a href="cart.html" class="cart-icon">
+            <img
+              src="https://img.icons8.com/ios-filled/24/shopping-bag.png"
+              alt="Cart"
+            />
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="myorder-page">
+      <h2>My Orders</h2>
+      <div id="ordersContainer"></div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+      const user =
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(sessionStorage.getItem("user"));
+      if (!user) {
+        window.location.href = `/login.html?redirect=${encodeURIComponent(
+          window.location.pathname
+        )}`;
+      }
+      const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+      // Filter orders for current user
+      const userOrders = allOrders.filter((order) => order.user === user.email);
+
+      function renderOrders() {
+        // Build HTML table
+        let tableHTML = `
+        <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total Items</th>
+              <th>Total Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+        if (userOrders.length === 0) {
+          tableHTML += `
+    <tr>
+      <td colspan="6" style="text-align: center;">No orders found</td>
+    </tr>
+  `;
+        } else {
+          userOrders.forEach((order, index) => {
+            const totalItems = order.orderItems.reduce(
+              (acc, item) => acc + item.quantity,
+              0
+            );
+            const totalPrice = order.orderItems.reduce(
+              (acc, item) => acc + item.quantity * item.price,
+              0
+            );
+
+            tableHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${order.id}</td>
+        <td>${order.createdAt.split("T")[0]}</td>
+        <td>${order.status}</td>
+        <td>${totalItems}</td>
+        <td>$${totalPrice.toFixed(2)}</td>
+        <td><button class="btn viewBtn"> <a  href="order.html?orderId=${
+          order.id
+        }">View</a> </button>
+            <button class="btn deleteBtn"  onclick="cancelOrder(${
+              order.id
+            })">Cancel</button></td>
+      </tr>
+    `;
+          });
+        }
+
+        tableHTML += `
+    </tbody>
+  </table>
+`;
+        document.getElementById("ordersContainer").innerHTML = tableHTML;
+      }
+
+      // Cancel an order
+      function cancelOrder(orderId) {
+        if (confirm("Are you sure you want to cancel this order?")) {
+          const updatedOrders = allOrders.filter(
+            (order) => order.id !== orderId
+          );
+          localStorage.setItem("orders", JSON.stringify(updatedOrders));
+          userOrders = updatedOrders.filter(
+            (order) => order.user === user.email
+          );
+          renderOrders();
+        }
+      }
+      // Initial render
+      renderOrders();
+    </script>
+  </body>
+</html>
