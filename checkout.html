@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      #userGreeting {
+        display: none;
+      }
+      #logout-btn {
+        display: none;
+      }
+      #login-btn {
+        display: inline;
+      }
+      #register-btn {
+        display: inline;
+      }
+      .checkout-summary-section {
+        position: sticky;
+        top: 100px;
+        right: 0;
+      }
+      .checkout-main-container h1 {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+      .checkout-container {
+        display: flex;
+        gap: 2rem;
+        margin: auto;
+        max-width: 1200px;
+      }
+
+      .checkout-container .form-section {
+        width: 70%;
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+
+      label {
+        display: block;
+        margin: 0.5rem 0 0.25rem;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .checkout-summary-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        flex-wrap: wrap;
+        width: 30%;
+        margin: 0 auto;
+        height: fit-content;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .summary-item span {
+        margin: 5px 0;
+      }
+
+      .checkout-card {
+        width: 100%;
+        /* height: fit-content; */
+      }
+
+      .checkout-card button {
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-top: 10px;
+      }
+
+      .summary-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        margin: 15px 0;
+      }
+      .summary-line .checkout-price {
+        font-size: 1.3rem;
+      }
+
+      @media (max-width: 926px) {
+        .checkout-container {
+          flex-direction: column;
+        }
+        .checkout-container .form-section {
+          width: 80%;
+        }
+        .checkout-summary-section {
+          width: 80%;
+        }
+      }
+      @media (max-width: 768px) {
+        .checkout-container .form-section {
+          width: 100%;
+        }
+        .checkout-summary-section {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">FASHION</div>
+
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="auth-icon">
+        <div class="user-menu-container" id="userMenu">
+          <button id="userMenuButton" class="user-avatar">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar" />
+          </button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <button class="btn authBtn" id="userGreeting"></button>
+            <a class="btn" href="myorders.html">Orders</a>
+            <a class="btn" href="#">Profile</a>
+            <a class="btn" href="#">Settings</a>
+            <button class="btn" id="logout-btn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn authBtn" id="login-btn">
+            <a href="login.html">Login</a>
+          </button>
+          <button class="btn authBtn" id="register-btn">
+            <a href="register.html">Register</a>
+          </button>
+        </div>
+        <div class="icons">
+          <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+          <a href="cart.html" class="cart-icon">
+            <img
+              src="https://img.icons8.com/ios-filled/24/shopping-bag.png"
+              alt="Cart"
+            />
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="container checkout-main-container">
+      <h1>Checkout</h1>
+      <div class="checkout-container">
+        <!-- Billing & Shipping Form -->
+        <div class="form-section">
+          <h2>Billing & Shipping</h2>
+          <!-- <form id="checkoutForm"> -->
+          <div>
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" required />
+
+            <label for="address">Address</label>
+            <input type="text" id="address" required />
+
+            <label for="city">City</label>
+            <input type="text" id="city" required />
+
+            <label for="zip">ZIP/Postal Code</label>
+            <input type="text" id="zip" required />
+
+            <label for="country">Country</label>
+            <select id="country">
+              <option value="us">United States</option>
+              <option value="in">India</option>
+              <option value="uk">United Kingdom</option>
+            </select>
+
+            <h2>Payment Details</h2>
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" required />
+
+            <label for="expiry">Expiry Date</label>
+            <input type="text" id="expiry" placeholder="MM/YY" required />
+
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" required />
+            <!-- <button type="submit">Place Order</button> -->
+          </div>
+        </div>
+
+        <div class="checkout-summary-section">
+          <h1>Order Summary</h1>
+
+          <!-- <div class="checkout-card">
+            <hr />
+            <div class="summary-line">
+              <span class="total-price">Total:</span>
+              <span id="totalAmount">$0.00</span>
+            </div>
+            <button class="btn" type="submit" id="checkoutForm">
+              Place Order
+            </button>
+          </div> -->
+          <div class="checkout-card">
+            <div id="checkoutItemsList"></div>
+            <hr />
+            <div class="summary-line">
+              <span class="checkout-price">Total:</span>
+              <span class="checkout-price" id="totalAmount">$0.00</span>
+            </div>
+            <button class="btn" type="submit" id="checkoutForm">
+              Place Order
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h4>About FASHION</h4>
+          <p>
+            Your brand's story, values, and mission go here. You can add more
+            about your services too.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Follow Us</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Your Brand. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="navbar.js"></script>
+    <script src="createOrder.js"></script>
+    <script>
+      // redirect if have'nt localstorage user
+      const user =
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(sessionStorage.getItem("user"));
+      // if (!user?.email) {
+      //   window.location.href = "login.html";
+      // }
+
+      if (!user) {
+        // User is not logged in, redirect to login page with redirect param
+        window.location.href = `/login.html?redirect=${encodeURIComponent(
+          window.location.pathname
+        )}`;
+      }
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const totalAmount = document.getElementById("totalAmount");
+      const cartList = document.getElementById("checkoutItemsList");
+      const checkoutForm = document.getElementById("checkoutForm");
+      let total = 0;
+      cartList.innerHTML = "";
+
+      cart.forEach((item) => {
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("summary-item");
+        itemElement.innerHTML = `
+        <span>${item.name} × ${item.quantity}</span>
+        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+      `;
+        cartList.appendChild(itemElement);
+        total += item.price * item.quantity;
+      });
+      totalAmount.textContent = `$${total.toFixed(2)}`;
+
+      checkoutForm.addEventListener("click", () => {
+        const formData = {
+          // uniqueId: `order_${Date.now()}_${Math.random()
+          //   .toString(36)
+          //   .substr(2, 9)}`,
+          orderItems: cart || [],
+          user: user?.email,
+          totalPrice: total.toFixed(2),
+          fullName: document.getElementById("fullName").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          address: document.getElementById("address").value.trim(),
+          city: document.getElementById("city").value.trim(),
+          zip: document.getElementById("zip").value.trim(),
+          country: document.getElementById("country").value,
+          paymentMethod: "card",
+          cardNumber: document.getElementById("cardNumber").value.trim(),
+          expiry: document.getElementById("expiry").value.trim(),
+          cvv: document.getElementById("cvv").value.trim(),
+          timestamp: new Date().toISOString(),
+        };
+
+        if (user) {
+          createOrder(formData);
+        }
+      });
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCount = document.getElementById("cartCount");
+        if (cartCount) {
+          cartCount.textContent = totalItems;
+        }
+      }
+
+      updateCartCount();
+    </script>
+  </body>
+</html>

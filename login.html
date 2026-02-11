@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .login-form h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .login-form .form-input {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+      }
+
+      .login-form label {
+        margin: 0.8rem 0 0.25rem;
+        font-weight: bold;
+      }
+
+      .login-form input {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
+      .login-form button {
+        width: 100%;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .login-form button:hover {
+        background-color: #000;
+      }
+
+      .register-link {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .register-link a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+
+      .password-wrapper input {
+        width: 100%;
+        padding-right: 2.5rem;
+      }
+
+      .toggle-password {
+        position: absolute;
+        top: 35%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .remember-me {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: start;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.8rem;
+        margin: -0.5rem 0 0.5rem;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <form class="login-form" id="loginForm" novalidate>
+        <h2>Login</h2>
+
+        <div class="form-input">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
+          <small class="error-message" id="emailError"></small>
+        </div>
+        <div class="form-input">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            />
+            <span class="toggle-password" id="togglePassword">👁️</span>
+          </div>
+          <small class="error-message" id="passwordError"></small>
+        </div>
+
+        <div class="remember-me">
+          <input type="checkbox" id="rememberMe" />
+          <span>Remember me</span>
+        </div>
+
+        <button class="btn" type="submit">Login</button>
+
+        <p class="register-link">
+          Don't have an account? <a href="register.html">Register</a>
+        </p>
+      </form>
+    </div>
+
+    <script>
+      // redirect if have localstorage user
+      // const user =
+      //   JSON.parse(localStorage.getItem("user")) ||
+      //   JSON.parse(sessionStorage.getItem("user"));
+      // if (user) {
+      //   // window.location.href = "/";
+      // }
+
+      // Toggle show/hide password
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+
+      togglePassword.addEventListener("click", () => {
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+        togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+      });
+
+      // Form validation
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Get form values
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const rememberMe = document.getElementById("rememberMe").checked;
+
+          let isValid = true;
+
+          // Basic validation
+          if (!email) {
+            document.getElementById("emailError").textContent =
+              "Email is required";
+            isValid = false;
+          } else {
+            document.getElementById("emailError").textContent = "";
+          }
+
+          if (!password) {
+            document.getElementById("passwordError").textContent =
+              "Password is required";
+            isValid = false;
+          } else {
+            document.getElementById("passwordError").textContent = "";
+          }
+
+          if (!isValid) return;
+
+          // store user data in localstorage
+          //   if (response.ok) {
+          const user = {
+            email: email,
+          };
+
+          if (rememberMe) {
+            localStorage.setItem("user", JSON.stringify(user));
+          } else {
+            sessionStorage.setItem("user", JSON.stringify(user));
+          }
+          alert("Login successful!");
+          const params = new URLSearchParams(window.location.search);
+          const redirectPath = params.get("redirect") || "/";
+
+          // Redirect to originally intended page or home
+          window.location.href = redirectPath;
+
+          // window.location.href = "/";
+          //   }
+
+          // API request
+          //   try {
+          //     const response = await fetch("/api/login", {
+          //       method: "POST",
+          //       headers: {
+          //         "Content-Type": "application/json",
+          //       },
+          //       body: JSON.stringify({ email, password }),
+          //     });
+
+          //     const result = await response.json();
+
+          //     if (response.ok) {
+          //       // Success: store token/session
+          //       if (rememberMe) {
+          //         localStorage.setItem("authToken", result.token); // or sessionStorage
+          //       } else {
+          //         sessionStorage.setItem("authToken", result.token);
+          //       }
+
+          //       alert("Login successful!");
+          //       window.location.href = "/dashboard"; // redirect after login
+          //     } else {
+          //       alert(result.message || "Login failed.");
+          //     }
+          //   } catch (error) {
+          //     console.error("Login error:", error);
+          //     alert("Something went wrong. Please try again later.");
+          //   }
+        });
+    </script>
+  </body>
+</html>
