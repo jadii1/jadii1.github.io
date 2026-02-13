@@ -55,30 +55,53 @@ function renderProducts(filterCategory = "all") {
     card.setAttribute("data-category", product.category);
 
     card.innerHTML = `
-      <img  src="${product.images[0]}" alt="${product.title}">
+      <img src="${product.images[0]}" alt="${product.title}">
       <h3>${product.name.slice(0, 30)}...</h3>
       <p>$${product.price.toFixed(2)}</p>
       <button>
-      <a href="product.html?slug=${product.slug}">View Details</a>
-    </button>
-      <button class="add-to-cart-btn" data-id="${
-        product.slug
-      }">Add to Cart</button>
+        <a href="product.html?slug=${product.slug}">View Details</a>
+      </button>
+      <button class="add-to-cart-btn" data-id="${product.slug}">Add to Cart</button>
     `;
 
     productGrid.appendChild(card);
   });
+
+  // --- ADD TO CART & DATALAYER SECTION ---
   document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.getAttribute("data-id");
       const productToAdd = products.find((p) => p.slug == productId);
-      addToCart(productToAdd);
+
+      if (productToAdd) {
+        // 1. Execute the actual cart logic
+        addToCart(productToAdd);
+
+        // 2. Push to DataLayer for GTM/Facebook
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+          event: "add_to_cart",
+          ecommerce: {
+            currency: "USD",
+            value: productToAdd.price,
+            items: [{
+              item_id: productToAdd.slug,
+              item_name: productToAdd.name,
+              item_category: productToAdd.category,
+              item_brand: productToAdd.brand,
+              quantity: 1,
+              price: productToAdd.price
+            }]
+          }
+        });
+
+        console.log("AddToCart DataLayer Fired:", productToAdd.name);
+      }
     });
   });
 }
 
 // Filter logic
-
 function generateCategoryButtons(data) {
   const categories = ["all", ...new Set(data.map((item) => item.category))];
   const filterContainer = document.getElementById("filterButtons");
@@ -86,18 +109,12 @@ function generateCategoryButtons(data) {
   filterContainer.innerHTML = categories
     .map(
       (cat) => `
-      <button class="filter-btn ${
-        cat === "all" ? "active" : ""
-      }" data-category="${cat}">
+      <button class="filter-btn ${cat === "all" ? "active" : ""}" data-category="${cat}">
          ${cat}
-      </button>
-    `
+      </button>`
     )
     .join("");
-  // above category btn's text make capitalize using javascript or css
-  // ${cat.charAt(0).toUpperCase() + cat.slice(1)}
 
-  // Add event listeners
   const buttons = filterContainer.querySelectorAll(".filter-btn");
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -107,21 +124,6 @@ function generateCategoryButtons(data) {
     });
   });
 }
-
-// add to cart
-// function addToCart(product) {
-//   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-//   const exists = cart.find((item) => item.slug === product.slug);
-//   if (exists) {
-//     exists.quantity += 1;
-//   } else {
-//     cart.push({ ...product, quantity: 1 });
-//   }
-
-//   localStorage.setItem("cart", JSON.stringify(cart));
-//   alert(`${product.name} added to cart!`);
-// }
 
 generateCategoryButtons(products);
 renderProducts("all");
