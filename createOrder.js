@@ -1,12 +1,15 @@
 function createOrder(data) {
   console.log("data :", data);
 
+  // 1. orderId is generated here
+  const orderId = Date.now();
+
   const order = {
-    id: Date.now(),
+    id: orderId,
     user: data.user,
     status: "pending",
     createdAt: new Date(),
-    orderItems: data.orderItems,
+    orderItems: data.orderItems, // These are your "cartItems"
     shippingAddress: {
       address: data.address,
       city: data.city,
@@ -17,7 +20,7 @@ function createOrder(data) {
       uniqueId: data.uniqueId,
       zip: data.zip,
     },
-    totalPrice: data.totalPrice,
+    totalPrice: data.totalPrice, // This is your "totalPrice"
     paymentInfo: {
       paymentMethod: "card",
       cardNumber: data.cardNumber,
@@ -25,40 +28,38 @@ function createOrder(data) {
     },
   };
 
-  // 1. Get existing orders from LocalStorage
+  // Save order logic
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
-
-  // 2. Add new order to the list
   allOrders.push(order);
-
-  // 3. Save back to LocalStorage
   localStorage.setItem("orders", JSON.stringify(allOrders));
 
-  // --- DATALAYER PUSH (Your exact requested structure) ---
+  // 🚨 Before Redirect — We Push DataLayer
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: "purchase",
-    transaction_id: order.id,
-    value: order.totalPrice,
+    order_id: orderId,
+    value: data.totalPrice, // Matching your variable name
     currency: "USD",
-    contents: order.orderItems.map((item) => ({
+    contents: data.orderItems.map(item => ({
       id: item.id || item.uniqueId,
       quantity: item.quantity,
       item_price: item.price
-    })),
-    content_ids: order.orderItems.map((item) => item.id || item.uniqueId),
+    })), // Mapping your actual cart array (orderItems)
+    content_ids: data.orderItems.map(item => item.id || item.uniqueId),
     content_type: "product"
   });
-  // --- END DATALAYER PUSH ---
 
-  // 4. User Notification and Redirect
-  alert(`Order placed successfully!`);
-  
-  // Clear the cart before leaving
+  // Log to console so you can see it immediately
+  console.log("DataLayer Purchase Event Pushed:", window.dataLayer);
+
+  // Remove cart
   localStorage.removeItem("cart");
 
-  // Redirect to the order success page
-  window.location.href = `order.html?orderId=${order?.id}`;
+  // Alert stops execution, allowing you to check the console!
+  alert(`Order placed successfully! Check the console now.`);
 
-  return order;
+  // Redirect happens ONLY after you click "OK" on the alert
+  window.location.href = `order.html?orderId=${orderId}`;
+
+  return true;
 }
