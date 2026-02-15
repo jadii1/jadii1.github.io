@@ -1,10 +1,6 @@
 function createOrder(data) {
   console.log("data :", data);
 
-  //   let totalPrice = 0;
-  //   data?.orderItems?.forEach((item) => {
-  //     totalPrice += item.price * item.quantity;
-  //   });
   const order = {
     id: Date.now(),
     user: data.user,
@@ -29,19 +25,40 @@ function createOrder(data) {
     },
   };
 
-  // Get existing orders
+  // 1. Get existing orders from LocalStorage
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  // Add new order
+  // 2. Add new order to the list
   allOrders.push(order);
 
-  // Save back
-  const saveOrder = localStorage.setItem("orders", JSON.stringify(allOrders));
+  // 3. Save back to LocalStorage
+  localStorage.setItem("orders", JSON.stringify(allOrders));
 
+  // --- DATALAYER PUSH (Your exact requested structure) ---
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: "purchase",
+    transaction_id: order.id,
+    value: order.totalPrice,
+    currency: "USD",
+    contents: order.orderItems.map((item) => ({
+      id: item.id || item.uniqueId,
+      quantity: item.quantity,
+      item_price: item.price
+    })),
+    content_ids: order.orderItems.map((item) => item.id || item.uniqueId),
+    content_type: "product"
+  });
+  // --- END DATALAYER PUSH ---
+
+  // 4. User Notification and Redirect
   alert(`Order placed successfully!`);
-  window.location.href = `order.html?orderId=${order?.id}`;
+  
+  // Clear the cart before leaving
   localStorage.removeItem("cart");
 
-  return saveOrder;
-  //   return localStorage.setItem("order", JSON.stringify(order));
+  // Redirect to the order success page
+  window.location.href = `order.html?orderId=${order?.id}`;
+
+  return order;
 }
