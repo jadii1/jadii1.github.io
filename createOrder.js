@@ -1,65 +1,61 @@
 function createOrder(data) {
-  console.log("data :", data);
-
-  // 1. orderId is generated here
+  // 1. Order ID Generation
   const orderId = Date.now();
+  const totalPrice = data.totalPrice;
+  const cartItems = data.orderItems || [];
 
+  // 2. DataLayer Logic
+  window.dataLayer = window.dataLayer || [];
+  
+  const purchaseEvent = {
+    event: "purchase",
+    order_id: orderId,
+    value: totalPrice,
+    currency: "USD",
+    contents: cartItems.map(item => ({
+      id: item.id || item.uniqueId || "no-id",
+      quantity: item.quantity || 1,
+      item_price: item.price || 0
+    })),
+    content_ids: cartItems.map(item => item.id || item.uniqueId || "no-id"),
+    content_type: "product"
+  };
+
+  // 🚨 THE FIX: Force it into the console BEFORE the push
+  console.log("--- DATALAYER DEBUG START ---");
+  console.dir(purchaseEvent); // This shows the clickable object
+  console.table(purchaseEvent.contents); // This shows your items in a nice table
+  console.log("--- DATALAYER DEBUG END ---");
+
+  // Push to GTM
+  window.dataLayer.push(purchaseEvent);
+
+  // 3. Save to LocalStorage
   const order = {
     id: orderId,
     user: data.user,
     status: "pending",
     createdAt: new Date(),
-    orderItems: data.orderItems, // These are your "cartItems"
+    orderItems: cartItems,
+    totalPrice: totalPrice,
     shippingAddress: {
-      address: data.address,
-      city: data.city,
-      country: data.country,
-      createdAt: data.createdAt,
-      email: data.email,
-      fullName: data.fullName,
-      uniqueId: data.uniqueId,
-      zip: data.zip,
-    },
-    totalPrice: data.totalPrice, // This is your "totalPrice"
-    paymentInfo: {
-      paymentMethod: "card",
-      cardNumber: data.cardNumber,
-      expiry: data.expiry,
-    },
+       address: data.address,
+       city: data.city,
+       country: data.country,
+       fullName: data.fullName,
+       zip: data.zip
+    }
   };
 
-  // Save order logic
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
   allOrders.push(order);
   localStorage.setItem("orders", JSON.stringify(allOrders));
 
-  // 🚨 Before Redirect — We Push DataLayer
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: "purchase",
-    order_id: orderId,
-    value: data.totalPrice, // Matching your variable name
-    currency: "USD",
-    contents: data.orderItems.map(item => ({
-      id: item.id || item.uniqueId,
-      quantity: item.quantity,
-      item_price: item.price
-    })), // Mapping your actual cart array (orderItems)
-    content_ids: data.orderItems.map(item => item.id || item.uniqueId),
-    content_type: "product"
-  });
-
-  // Log to console so you can see it immediately
-  console.log("DataLayer Purchase Event Pushed:", window.dataLayer);
-
-  // Remove cart
+  // 4. STOP HERE FOR INSPECTION
   localStorage.removeItem("cart");
+  
+  alert("STOP! Look at your console now BEFORE clicking OK.");
 
-  // Alert stops execution, allowing you to check the console!
-  alert(`Order placed successfully! Check the console now.`);
-
-  // Redirect happens ONLY after you click "OK" on the alert
+  // Redirect
   window.location.href = `order.html?orderId=${orderId}`;
-
-  return true;
 }
