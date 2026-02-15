@@ -1,61 +1,60 @@
 function createOrder(data) {
-  // 1. Order ID Generation
-  const orderId = Date.now();
-  const totalPrice = data.totalPrice;
-  const cartItems = data.orderItems || [];
+  console.log("data :", data);
 
-  // 2. DataLayer Logic
-  window.dataLayer = window.dataLayer || [];
-  
-  const purchaseEvent = {
-    event: "purchase",
-    order_id: orderId,
-    value: totalPrice,
-    currency: "USD",
-    contents: cartItems.map(item => ({
-      id: item.id || item.uniqueId || "no-id",
-      quantity: item.quantity || 1,
-      item_price: item.price || 0
-    })),
-    content_ids: cartItems.map(item => item.id || item.uniqueId || "no-id"),
-    content_type: "product"
-  };
-
-  // 🚨 THE FIX: Force it into the console BEFORE the push
-  console.log("--- DATALAYER DEBUG START ---");
-  console.dir(purchaseEvent); // This shows the clickable object
-  console.table(purchaseEvent.contents); // This shows your items in a nice table
-  console.log("--- DATALAYER DEBUG END ---");
-
-  // Push to GTM
-  window.dataLayer.push(purchaseEvent);
-
-  // 3. Save to LocalStorage
   const order = {
-    id: orderId,
+    id: Date.now(),
     user: data.user,
     status: "pending",
     createdAt: new Date(),
-    orderItems: cartItems,
-    totalPrice: totalPrice,
+    orderItems: data.orderItems,
     shippingAddress: {
-       address: data.address,
-       city: data.city,
-       country: data.country,
-       fullName: data.fullName,
-       zip: data.zip
-    }
+      address: data.address,
+      city: data.city,
+      country: data.country,
+      createdAt: data.createdAt,
+      email: data.email,
+      fullName: data.fullName,
+      uniqueId: data.uniqueId,
+      zip: data.zip,
+    },
+    totalPrice: Number(data.totalPrice), // Ensure numeric value
+    paymentInfo: {
+      paymentMethod: "card",
+      cardNumber: data.cardNumber,
+      expiry: data.expiry,
+    },
   };
 
+  // 1️⃣ Get existing orders
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  // 2️⃣ Add new order
   allOrders.push(order);
+
+  // 3️⃣ Save back
   localStorage.setItem("orders", JSON.stringify(allOrders));
 
-  // 4. STOP HERE FOR INSPECTION
-  localStorage.removeItem("cart");
-  
-  alert("STOP! Look at your console now BEFORE clicking OK.");
+  // 4️⃣ Push Purchase Event to DataLayer (Meta Optimized Structure)
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: "purchase",
+    transaction_id: order.id,
+    value: order.totalPrice,
+    currency: "USD", // Change if needed
+    contents: order.orderItems.map((item) => ({
+      id: item.id || item.uniqueId,
+      quantity: Number(item.quantity),
+      item_price: Number(item.price)
+    })),
+    content_ids: order.orderItems.map((item) => item.id || item.uniqueId),
+    content_type: "product"
+  });
 
-  // Redirect
-  window.location.href = `order.html?orderId=${orderId}`;
+  // 5️⃣ Clear cart BEFORE redirect
+  localStorage.removeItem("cart");
+
+  // 6️⃣ Redirect to success page
+  window.location.href = `order.html?orderId=${order.id}`;
+
+  return order;
 }
