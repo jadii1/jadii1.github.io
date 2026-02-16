@@ -1,6 +1,10 @@
 function createOrder(data) {
   console.log("data :", data);
 
+  //   let totalPrice = 0;
+  //   data?.orderItems?.forEach((item) => {
+  //     totalPrice += item.price * item.quantity;
+  //   });
   const order = {
     id: Date.now(),
     user: data.user,
@@ -17,7 +21,7 @@ function createOrder(data) {
       uniqueId: data.uniqueId,
       zip: data.zip,
     },
-    totalPrice: Number(data.totalPrice),
+    totalPrice: data.totalPrice,
     paymentInfo: {
       paymentMethod: "card",
       cardNumber: data.cardNumber,
@@ -25,43 +29,19 @@ function createOrder(data) {
     },
   };
 
-  // 1️⃣ Get existing orders
+  // Get existing orders
   const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  // 2️⃣ Add new order
+  // Add new order
   allOrders.push(order);
 
-  // 3️⃣ Save back to LocalStorage
-  localStorage.setItem("orders", JSON.stringify(allOrders));
+  // Save back
+  const saveOrder = localStorage.setItem("orders", JSON.stringify(allOrders));
 
-  // 4️⃣ Push Purchase Event to DataLayer
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: "purchase",
-    transaction_id: order.id,
-    value: order.totalPrice,
-    currency: "USD",
-    contents: order.orderItems.map((item) => ({
-      id: item.id || item.uniqueId,
-      quantity: Number(item.quantity),
-      item_price: Number(item.price)
-    })),
-    content_ids: order.orderItems.map((item) => item.id || item.uniqueId),
-    content_type: "product"
-  });
-
-  // 🔎 Debug Confirmation Logs
-  console.log("✅ PURCHASE EVENT PUSHED SUCCESSFULLY");
-  console.log("Latest DataLayer Entry:", window.dataLayer[window.dataLayer.length - 1]);
-  console.log("All Purchase Events:", window.dataLayer.filter(e => e.event === "purchase"));
-
-  alert("Order placed successfully! (Redirect temporarily disabled for debugging)");
-
-  // ❌ REDIRECT DISABLED FOR DEBUGGING
-  // window.location.href = `order.html?orderId=${order.id}`;
-
-  // Cart cleared AFTER debugging (optional)
+  alert(`Order placed successfully!`);
+  window.location.href = `order.html?orderId=${order?.id}`;
   localStorage.removeItem("cart");
 
-  return order;
+  return saveOrder;
+  //   return localStorage.setItem("order", JSON.stringify(order));
 }
